@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate secure and memorable passwords using LeetSpeak Password Generator.">
+    <meta name="keywords" content="password, generator, leetspeak, security, leet">
+    <meta name="author" content="Kailash Bohara">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>LeetSpeak Password Generator</title>
+</head>
+<body>
+    <div class="container mt-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title text-center">LeetSpeak Password Generator</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="inputWord" placeholder="Enter your word">
+                        </div>
+                        <button class="btn btn-success" onclick="convertToLeetSpeak()">Convert</button>
+                        <div id="output" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <p> <br><b>Examples:</b><br>
+            <i> I like football</i><br>
+            <i> I love Nepal</i><br>
+            <i>ilovenepal</i><br>
+            <i>spiderman no way home</i><br>
+            <i>1234apples</i><br>
+            <i>phone no 9851</i><br><br><br><br><br><br>
+        </p>
+         <div id="reminder" class="container mt-5 text-center"></div>
+
+    <script>
+        function toLeetSpeak(word) {
+            const leetMapping = {
+                'a': '@',
+                'b': '8',
+                'e': '3',
+                'i': '!',
+                'l': 'L',
+                'o': '0',
+                's': '$',
+                ' ': '_',
+                'h': 'H',
+                't': '7'
+            };
+
+            let leetWord = '';
+            let lastChar = null;
+            const uppercaseIndex = Math.floor(Math.random() * word.length);
+            let hasDigit = false;
+
+            for (let i = 0; i < word.length; i++) {
+                let character = word[i].toLowerCase();
+                let leetChar = (character !== lastChar && leetMapping[character]) || character;
+                if (leetChar !== character) {
+                    lastChar = character;
+                }
+                if (i === uppercaseIndex) {
+                    leetChar = leetChar.toUpperCase();
+                }
+                if (leetChar >= '0' && leetChar <= '9') {
+                    hasDigit = true;
+                }
+                leetWord += leetChar;
+            }
+
+            if (!hasDigit) {
+                const randomDigit = Math.floor(Math.random() * 10);
+                leetWord += randomDigit;
+            }
+
+            return leetWord;
+        }
+
+   function validateInput(input) {
+    let alphabetCount = 0;
+    let numberCount = 0;
+
+    for (let char of input) {
+        if (char.match(/[a-zA-Z]/)) {
+            alphabetCount++;
+        }
+        if (char.match(/[0-9]/)) {
+            numberCount++;
+        }
+    }
+
+            const hasLowerCase = /[a-z]/.test(input);
+            const hasMinimumAlphabets = alphabetCount >= 5;
+            const hasMinimumLength = input.length >= 10;
+            const hasLessThanFiveNumbers = numberCount < 5;
+            return hasLowerCase && hasMinimumLength && hasMinimumAlphabets && hasLessThanFiveNumbers;
+        }
+
+        function convertToLeetSpeak() {
+            const inputWord = document.getElementById('inputWord').value;
+            const output = document.getElementById('output');
+            const reminder = document.getElementById('reminder');
+
+            if (validateInput(inputWord)) {
+                const leetWord = toLeetSpeak(inputWord);
+                output.innerHTML = 'LeetSpeak Password: <span class="text-success"> <b>' + toLeetSpeak(inputWord) + '</b></span>';
+                reminder.innerHTML = '<span class="text-danger"> Note: Always remember your input i.e. <b> '+ inputWord +' </b> so that you can regenerate your passwords once forget. For your information we do not log your inputs.';
+
+
+            } else {
+                output.innerHTML = '<span class="text-danger">Error: Input must be at least 10 characters and must have minimum 5 alphabets and must have not more than 5 numbers. </span>';
+            }
+        }
+    </script>
+</body>
+</html>
